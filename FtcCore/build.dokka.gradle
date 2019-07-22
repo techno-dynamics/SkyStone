@@ -1,0 +1,5 @@
+dokka {
+    moduleName = 'ftc-core'
+    outputFormat = 'gfm'
+    outputDirectory = "../docs/"
+}
