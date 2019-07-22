@@ -1,3 +1,6 @@
+# hprof files
+*.hprof
+
 # built application files
 *.apk
 *.ap_
