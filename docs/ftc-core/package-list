@@ -1,0 +1,10 @@
+$dokka.format:gfm
+$dokka.linkExtension:md
+$dokka.location:io.arct.ftccore.extentions$round(kotlin.Double, kotlin.Int)io.arct.ftccore.extentions/kotlin.-double/round.md
+io.arct.ftccore
+io.arct.ftccore.controller
+io.arct.ftccore.device
+io.arct.ftccore.extentions
+io.arct.ftccore.gamepad
+io.arct.ftccore.robot
+io.arct.ftccore.telemetry
