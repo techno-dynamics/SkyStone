@@ -48,9 +48,10 @@ class Motor internal constructor(private var m: DcMotor) : Device(m) {
      */
     fun move(power: Double, position: Double, wait: Boolean = true) {
         m.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        m.mode = DcMotor.RunMode.RUN_TO_POSITION
 
         m.targetPosition = (position * distanceConstant).toInt()
+
+        m.mode = DcMotor.RunMode.RUN_TO_POSITION
         m.power = power
 
         if (!wait)
