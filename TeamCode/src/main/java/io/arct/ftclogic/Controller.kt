@@ -1,19 +1,19 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import io.arct.ftccore.OperationMode
-import io.arct.ftccore.controller.DriveController
-import io.arct.ftccore.controller.HolonomicDrive
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import io.arct.ftclib.drive.Drive
+import io.arct.ftclib.drive.MecanumDrive
+import io.arct.ftclib.eventloop.OperationMode
 
-@TeleOp
-class Controller : OperationMode() {
-    private var drive: DriveController? = null
+@OperationMode.Bind(OperationMode.Type.OPERATED)
+class Controller(sdk: OpMode) : OperationMode(sdk) {
+    private var drive: Drive? = null
 
     override fun init() {
-        drive = HolonomicDrive(robot, listOf("left-front", "right-front", "left-back", "right-back"))
+        drive = MecanumDrive(robot, listOf("left-front", "right-front", "left-back", "right-back"))
     }
 
     override fun loop() {
-        drive!!.use(robot.gamepad[0])
+        drive!!.gamepad(robot.gamepad[0])
     }
 }

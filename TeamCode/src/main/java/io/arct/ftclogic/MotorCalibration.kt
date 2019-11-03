@@ -1,25 +1,26 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import io.arct.ftccore.LinearOperationMode
-import io.arct.ftccore.device.Motor
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import io.arct.ftclib.eventloop.LinearOperationMode
+import io.arct.ftclib.hardware.motor.Motor
+import io.arct.ftclib.eventloop.OperationMode
 
-@TeleOp
-class MotorCalibration : LinearOperationMode() {
+@OperationMode.Bind(OperationMode.Type.OPERATED)
+class MotorCalibration(sdk: LinearOpMode) : LinearOperationMode(sdk) {
     private var motor: Motor? = null
 
-    override fun _init() {
-        motor = robot.map.motor("motor")
+    override fun start() {
+        motor = robot.map("motor")
 
         log.autoClear = true
 
         log
-                .add("Ready!")
-                .update()
+            .add("Ready!")
+            .update()
     }
 
     override fun run() {
-        while (this.opModeIsActive()) {
+        while (active) {
             val gamepad = robot.gamepad[0]
 
             log.add(listOf("Rotation Constant (degrees): ${Motor.distanceConstant}", "Encoder Value: ${motor!!.position}")).update()

@@ -1,24 +1,24 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import io.arct.ftccore.OperationMode
-import io.arct.ftccore.device.Motor
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import io.arct.ftclib.eventloop.OperationMode
+import io.arct.ftclib.hardware.motor.Motor
 import kotlin.math.roundToInt
 
-@TeleOp
-class PrecisionDebug : OperationMode() {
+@OperationMode.Bind(OperationMode.Type.OPERATED)
+class PrecisionDebug(sdk: OpMode) : OperationMode(sdk) {
     private var motors: Array<Motor>? = null
     private var selected = 0
     private var speed = 1.0
 
     override fun init() {
-        motors = arrayOf(robot.map.motor("m1"), robot.map.motor("m2"), robot.map.motor("m3"), robot.map.motor("m4"))
+        motors = arrayOf(robot.map("m1"), robot.map("m2"), robot.map("m3"), robot.map("m4"))
 
         log.autoClear = true
 
         log
-                .add("Ready!")
-                .update()
+            .add("Ready!")
+            .update()
     }
 
     override fun loop() {
@@ -55,16 +55,16 @@ class PrecisionDebug : OperationMode() {
         // DEACTIVATE OTHER MOTORS
         for (i in motors!!.indices)
             if (i != selected)
-                motors!![i].power(0.0)
+                motors!![i].power = 0.0
 
         // ACTIVATE MOTOR
         when {
             gamepad.lt > 0.5 ->
-                motors!![selected].power(-speed)
+                motors!![selected].power = -speed
             gamepad.rt > 0.5 ->
-                motors!![selected].power(speed)
+                motors!![selected].power = speed
             else ->
-                motors!![selected].power(0.0)
+                motors!![selected].power = 0.0
         }
     }
 }

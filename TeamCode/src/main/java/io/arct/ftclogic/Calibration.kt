@@ -1,28 +1,29 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import io.arct.ftccore.LinearOperationMode
-import io.arct.ftccore.controller.DriveController
-import io.arct.ftccore.controller.HolonomicDrive
-import io.arct.ftccore.extentions.round
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import io.arct.ftclib.drive.Drive
+import io.arct.ftclib.drive.HolonomicDrive
+import io.arct.ftclib.eventloop.LinearOperationMode
+import io.arct.ftclib.extentions.round
+import io.arct.ftclib.eventloop.OperationMode
 
-@TeleOp
-class Calibration : LinearOperationMode() {
+@OperationMode.Bind(OperationMode.Type.OPERATED)
+class Calibration(sdk: LinearOpMode) : LinearOperationMode(sdk) {
     private var calibratingDistance: Boolean = false
-    private var drive: DriveController? = null
+    private var drive: Drive? = null
 
-    override fun _init() {
+    override fun start() {
         drive = HolonomicDrive(robot, listOf("left-front", "right-front", "left-back", "right-back"))
 
         log.autoClear = true
 
         log
-                .add("Ready!")
-                .update()
+            .add("Ready!")
+            .update()
     }
 
     override fun run() {
-        while (this.opModeIsActive()) {
+        while (active) {
             val gamepad = robot.gamepad[0]
 
             log.add(listOf("Rotation Constant (degrees): ${HolonomicDrive.rotationConstant}", "Distance Constant (cm): ${HolonomicDrive.distanceConstant}", "Currently Calibrating: ${(if (calibratingDistance) "Distance" else "Rotation") + " Constant"}")).update()

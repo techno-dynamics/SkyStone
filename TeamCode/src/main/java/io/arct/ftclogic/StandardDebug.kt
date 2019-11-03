@@ -1,29 +1,29 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import io.arct.ftccore.OperationMode
-import io.arct.ftccore.device.Motor
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import io.arct.ftclib.eventloop.OperationMode
+import io.arct.ftclib.hardware.motor.Motor
 
-@TeleOp
-class StandardDebug : OperationMode() {
+@OperationMode.Bind(OperationMode.Type.OPERATED)
+class StandardDebug(sdk: OpMode) : OperationMode(sdk) {
     private var motors: Array<Motor>? = null
 
     override fun init() {
-        motors = arrayOf(robot.map.motor("m1"), robot.map.motor("m2"), robot.map.motor("m3"), robot.map.motor("m4"))
+        motors = arrayOf(robot.map("m1"), robot.map("m2"), robot.map("m3"), robot.map("m4"))
 
         log.autoClear = true
 
         log
-                .add("Ready!")
-                .update()
+            .add("Ready!")
+            .update()
     }
 
     override fun loop() {
         val gamepad = robot.gamepad[0]
 
-        motors!![0].power(gamepad.left.x.toDouble())
-        motors!![1].power(gamepad.right.x.toDouble())
-        motors!![2].power(gamepad.left.y.toDouble())
-        motors!![3].power(gamepad.right.y.toDouble())
+        motors!![0].power = gamepad.left.x
+        motors!![1].power = gamepad.right.x
+        motors!![2].power = gamepad.left.y
+        motors!![3].power = gamepad.right.y
     }
 }

@@ -1,22 +1,19 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import io.arct.ftccore.OperationMode
-import io.arct.ftccore.controller.DriveController
-import io.arct.ftccore.controller.HolonomicDrive
-import io.arct.ftccore.device.Motor
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import io.arct.ftclib.drive.Drive
+import io.arct.ftclib.drive.MecanumDrive
+import io.arct.ftclib.eventloop.OperationMode
+import io.arct.ftclib.hardware.motor.Motor
 
-@Autonomous
-class Test : OperationMode() {
-    private var drive: DriveController? = null
+@OperationMode.Bind(OperationMode.Type.AUTONOMOUS)
+class Test(sdk: OpMode) : OperationMode(sdk) {
+    private var drive: Drive? = null
 
     override fun init() {
         Motor.distanceConstant = 10000.0
 
-        HolonomicDrive.rotationConstant = 10000.0
-        HolonomicDrive.distanceConstant = 10000.0
-
-        drive = HolonomicDrive(robot, listOf("left-front", "right-front", "left-back", "right-back"))
+        drive = MecanumDrive(robot, listOf("left-front", "right-front", "left-back", "right-back"))
     }
 
     override fun loop() {

@@ -15,9 +15,21 @@
 apply from: '../build.common.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 repositories {
     mavenCentral()
 }
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    kapt files('libs/ftc-processor-1.0.0.jar')
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.squareup:kotlinpoet:1.4.2"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
