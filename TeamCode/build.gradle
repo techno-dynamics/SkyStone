@@ -20,12 +20,13 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation files('libs/ftc-lib-0.9.1.jar')
+    kapt files('libs/ftc-processor-0.9.1.jar')
 
-    kapt files('libs/ftc-processor-1.0.0.jar')
+    implementation "com.squareup:kotlinpoet:1.4.4"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.squareup:kotlinpoet:1.4.2"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

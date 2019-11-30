@@ -1,12 +1,11 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import io.arct.ftclib.eventloop.OperationMode
 import io.arct.ftclib.hardware.motor.Motor
 import kotlin.math.roundToInt
 
-@OperationMode.Bind(OperationMode.Type.OPERATED)
-class PrecisionDebug(sdk: OpMode) : OperationMode(sdk) {
+@OperationMode.Bind(OperationMode.Type.Operated, name = "Precision Debug", group = "Debug")
+class PrecisionDebug : OperationMode() {
     private var motors: Array<Motor>? = null
     private var selected = 0
     private var speed = 1.0

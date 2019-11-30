@@ -1,19 +1,24 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import io.arct.ftclib.drive.Drive
 import io.arct.ftclib.drive.HolonomicDrive
+import io.arct.ftclib.drive.MecanumDrive
 import io.arct.ftclib.eventloop.LinearOperationMode
 import io.arct.ftclib.extentions.round
 import io.arct.ftclib.eventloop.OperationMode
 
-@OperationMode.Bind(OperationMode.Type.OPERATED)
-class Calibration(sdk: LinearOpMode) : LinearOperationMode(sdk) {
+@OperationMode.Bind(OperationMode.Type.Operated, group = "Calibration")
+class Calibration : LinearOperationMode() {
     private var calibratingDistance: Boolean = false
     private var drive: Drive? = null
 
     override fun start() {
-        drive = HolonomicDrive(robot, listOf("left-front", "right-front", "left-back", "right-back"))
+        drive = MecanumDrive(robot,
+            robot.map("left-front"),
+            robot.map("right-front"),
+            robot.map("left-back"),
+            robot.map("right-back")
+        )
 
         log.autoClear = true
 

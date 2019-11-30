@@ -1,12 +1,11 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import io.arct.ftclib.eventloop.LinearOperationMode
 import io.arct.ftclib.hardware.motor.Motor
 import io.arct.ftclib.eventloop.OperationMode
 
-@OperationMode.Bind(OperationMode.Type.OPERATED)
-class MotorCalibration(sdk: LinearOpMode) : LinearOperationMode(sdk) {
+@OperationMode.Bind(OperationMode.Type.Operated, name = "Motor Calibration", group = "Calibration")
+class MotorCalibration : LinearOperationMode() {
     private var motor: Motor? = null
 
     override fun start() {

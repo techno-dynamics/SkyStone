@@ -1,11 +1,10 @@
 package io.arct.ftclogic
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import io.arct.ftclib.eventloop.OperationMode
 import io.arct.ftclib.hardware.motor.Motor
 
-@OperationMode.Bind(OperationMode.Type.OPERATED)
-class StandardDebug(sdk: OpMode) : OperationMode(sdk) {
+@OperationMode.Bind(OperationMode.Type.Operated, name = "Standard Debug", group = "Debug")
+class StandardDebug : OperationMode() {
     private var motors: Array<Motor>? = null
 
     override fun init() {
