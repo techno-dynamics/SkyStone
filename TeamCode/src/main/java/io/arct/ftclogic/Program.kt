@@ -22,11 +22,11 @@ class Program : LinearOperationMode() {
 
     override fun run() {
         drive.move(Direction.Forward, 0.75)
-        sleep(1000)
+        sleep(500)
         drive.stop()
 
         drive.move(Direction.Right, 0.75)
-        sleep(1750)
+        sleep(1375)
         drive.stop()
     }
 }
