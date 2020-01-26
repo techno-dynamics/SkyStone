@@ -99,7 +99,7 @@ class Controller : OperationMode() {
     }
 
     private fun pivot() {
-        pivot.power = if (pivotBrick) -0.5 else 0.5
+        pivot.power = if (pivotBrick) -0.07 else 1.0
     }
 
     private fun capstone() {

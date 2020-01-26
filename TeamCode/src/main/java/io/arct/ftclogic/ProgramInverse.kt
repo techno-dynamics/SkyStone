@@ -5,8 +5,8 @@ import io.arct.ftclib.eventloop.LinearOperationMode
 import io.arct.ftclib.eventloop.OperationMode
 import io.arct.ftclib.util.Direction
 
-@OperationMode.Bind(OperationMode.Type.Autonomous, name = "Autonomous (RIGHT)", group = "Main")
-class Program : LinearOperationMode() {
+@OperationMode.Bind(OperationMode.Type.Autonomous, name = "Autonomous (LEFT)", group = "Main")
+class ProgramInverse : LinearOperationMode() {
     private lateinit var drive: MecanumDrive
 
     override fun init() {
@@ -27,7 +27,7 @@ class Program : LinearOperationMode() {
         sleep(1000)
         drive.stop()
 
-        drive.move(Direction.Right, 0.35)
+        drive.move(Direction.Left, 0.35)
         sleep(2500)
         drive.stop()
     }
