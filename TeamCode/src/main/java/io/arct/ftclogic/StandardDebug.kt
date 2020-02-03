@@ -1,14 +1,16 @@
 package io.arct.ftclogic
 
 import io.arct.ftclib.eventloop.OperationMode
-import io.arct.ftclib.hardware.motor.Motor
+import io.arct.ftclib.hardware.gamepad.Gamepad
+import io.arct.robotlib.hardware.motors.Motor
+import io.arct.robotlib.robot.device
 
 @OperationMode.Bind(OperationMode.Type.Operated, name = "Standard Debug", group = "Debug")
 class StandardDebug : OperationMode() {
     private var motors: Array<Motor>? = null
 
     override fun init() {
-        motors = arrayOf(robot.map("m1"), robot.map("m2"), robot.map("m3"), robot.map("m4"))
+        motors = arrayOf(robot device "motor-0", robot device "motor-1", robot device "motor-2", robot device "motor-3")
 
         log.autoClear = true
 
@@ -18,7 +20,7 @@ class StandardDebug : OperationMode() {
     }
 
     override fun loop() {
-        val gamepad = robot.gamepad[0]
+        val gamepad: Gamepad = robot.gamepad[0]
 
         motors!![0].power = gamepad.left.x
         motors!![1].power = gamepad.right.x

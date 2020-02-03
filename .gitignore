@@ -1,3 +1,6 @@
+# Build Secrets
+secrets.properties
+
 # built application files
 *.apk
 *.ap_

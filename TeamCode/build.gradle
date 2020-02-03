@@ -16,12 +16,15 @@ apply from: '../build.common.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+
 repositories {
     mavenCentral()
 }
+
 dependencies {
-    implementation files('libs/ftc-lib-0.9.1.jar')
-    kapt files('libs/ftc-processor-0.9.1.jar')
+    implementation files('libs/robot-lib-1.0.0.jar')
+    implementation files('libs/ftc-lib-1.0.0.jar')
+    kapt files('libs/ftc-processor-1.0.0.jar')
 
     implementation "com.squareup:kotlinpoet:1.4.4"
 

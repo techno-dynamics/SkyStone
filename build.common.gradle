@@ -19,6 +19,9 @@ import java.util.regex.Pattern
 
 apply plugin: 'com.android.application'
 
+def secrets = new Properties()
+secrets.load(new FileInputStream(rootProject.file("secrets.properties")))
+
 android {
     compileSdkVersion 28
 
@@ -73,6 +76,8 @@ android {
                 includeCompileClasspath = true
             }
         }
+
+        buildConfigField("String", "VUFORIA_KEY", secrets["vuforia_key"])
     }
 
     // Advanced user code might just want to use Vuforia directly, so we set up the libs as needed

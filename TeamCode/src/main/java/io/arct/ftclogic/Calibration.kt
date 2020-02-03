@@ -1,25 +1,28 @@
 package io.arct.ftclogic
 
-import io.arct.ftclib.drive.Drive
 import io.arct.ftclib.drive.HolonomicDrive
 import io.arct.ftclib.drive.MecanumDrive
 import io.arct.ftclib.eventloop.LinearOperationMode
-import io.arct.ftclib.extentions.round
 import io.arct.ftclib.eventloop.OperationMode
+import io.arct.robotlib.drive.Drive
+import io.arct.robotlib.extensions.round
+import io.arct.robotlib.navigation.Direction
+import io.arct.robotlib.robot.device
 
 @OperationMode.Bind(OperationMode.Type.Operated, group = "Calibration")
 class Calibration : LinearOperationMode() {
     private var calibratingDistance: Boolean = false
-    private var drive: Drive? = null
 
-    override fun start() {
-        drive = MecanumDrive(robot,
-            robot.map("left-front"),
-            robot.map("right-front"),
-            robot.map("left-back"),
-            robot.map("right-back")
-        )
+    private var drive: Drive = MecanumDrive(robot,
+        robot device "motor0",
+        robot device "motor3",
+        robot device "motor1",
+        robot device "motor2",
 
+        directionConstant = 180.0
+    )
+
+    init {
         log.autoClear = true
 
         log
@@ -31,7 +34,11 @@ class Calibration : LinearOperationMode() {
         while (active) {
             val gamepad = robot.gamepad[0]
 
-            log.add(listOf("Rotation Constant (degrees): ${HolonomicDrive.rotationConstant}", "Distance Constant (cm): ${HolonomicDrive.distanceConstant}", "Currently Calibrating: ${(if (calibratingDistance) "Distance" else "Rotation") + " Constant"}")).update()
+            log
+                .add("Rotation Constant (degrees): " + HolonomicDrive.rotationConstant)
+                .add("Distance Constant (cm): " + HolonomicDrive.distanceConstant)
+                .add("Currently Calibrating: ${if (calibratingDistance) "Distance" else "Rotation"} Constant")
+                .update()
 
             var modifier = 0.0
 
@@ -60,11 +67,11 @@ class Calibration : LinearOperationMode() {
                 if (calibratingDistance) {
                     log.add(listOf("Calibrating Distance...", "Attempting to move robot by 2 metres.", "Distance Constant (cm): ${HolonomicDrive.distanceConstant}")).update()
 
-                    drive!!.move(0.0, 0.75, 200.0)
+                    drive.move(Direction.Forward, 0.2, 200.0)
                 } else {
                     log.add(listOf("Calibrating Rotation...", "Attempting to rotate robot by 16 rotations.", "Rotation Constant (degrees): ${HolonomicDrive.rotationConstant}")).update()
 
-                    drive!!.rotate(0.75, 360 * 16.0)
+                    drive.rotate(0.3, 360 * 16.0)
                 }
 
                 log.add(listOf("Completed Calibration Test", "Rotation Constant (degrees): ${HolonomicDrive.rotationConstant}", "Distance Constant (cm): ${HolonomicDrive.distanceConstant}")).update()

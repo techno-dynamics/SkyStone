@@ -2,31 +2,38 @@ package io.arct.ftclogic
 
 import io.arct.ftclib.drive.MecanumDrive
 import io.arct.ftclib.eventloop.OperationMode
-import io.arct.ftclib.gamepad.Gamepad
-import io.arct.ftclib.hardware.motor.ContinuousServo
-import io.arct.ftclib.hardware.motor.Motor
-import io.arct.ftclib.hardware.motor.Servo
-import io.arct.ftclib.hardware.sensor.Imu
-import io.arct.ftclib.hardware.sensor.TouchSensor
+import io.arct.ftclib.hardware.gamepad.Gamepad
+import io.arct.ftclib.hardware.sensors.FtcImu
+import io.arct.robotlib.hardware.motors.ContinuousServo
+import io.arct.robotlib.hardware.motors.Motor
+import io.arct.robotlib.hardware.motors.Servo
+import io.arct.robotlib.hardware.sensors.TouchSensor
+import io.arct.robotlib.robot.device
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import kotlin.concurrent.thread
 
 @OperationMode.Bind(OperationMode.Type.Operated, name = "Standard Control", group = "Main")
 class Controller : OperationMode() {
-    private lateinit var drive: MecanumDrive
+    private val drive: MecanumDrive = MecanumDrive(robot,
+        robot device "motor0",
+        robot device "motor3",
+        robot device "motor1",
+        robot device "motor2",
+        rotation = ::orientation
+    )
 
-    private lateinit var imu: Imu
+    private val imu: FtcImu = robot device "imu"
 
-    private lateinit var intakeLeft: Motor
-    private lateinit var intakeRight: Motor
-    private lateinit var linear: ContinuousServo
+    private val intakeLeft: Motor = robot device "motor4"
+    private val intakeRight: Motor = robot device "motor5"
+    private val linear: ContinuousServo = robot device "servo6"
 
-    private lateinit var buildplateLeft: Servo
-    private lateinit var buildplateRight: Servo
-    private lateinit var clamp: Servo
-    private lateinit var pivot: ContinuousServo
-    private lateinit var capstone: Servo
-    private lateinit var limit: TouchSensor
+    private val buildplateLeft: Servo = robot device "servo2"
+    private val buildplateRight: Servo = robot device "servo7"
+    private val clamp: Servo = robot device "servo0"
+    private val pivot: ContinuousServo = robot device "servo1"
+    private val capstone: Servo = robot device "servo3"
+    private val limit: TouchSensor = robot device "digital0"
 
     private var buildplate: Boolean = false
     private var orientation: Double = ImuOffset
@@ -35,26 +42,7 @@ class Controller : OperationMode() {
     private var pressed: Boolean = false
     private var capstoneMode: Boolean = true
 
-    override fun init() {
-        imu = robot.map("imu")
-        intakeLeft = robot.map("motor4")
-        intakeRight = robot.map("motor5")
-        clamp = robot.map("servo0")
-        pivot = robot.map("servo1")
-        linear = robot.map("servo6")
-        buildplateLeft = robot.map("servo2")
-        buildplateRight = robot.map("servo7")
-        capstone = robot.map("servo3")
-        limit = robot.map("digital0")
-
-        drive = MecanumDrive(robot,
-            robot.map("motor0"),
-            robot.map("motor3"),
-            robot.map("motor1"),
-            robot.map("motor2"),
-            rotation = ::orientation
-        )
-
+    init {
         thread {
             imu.init()
 

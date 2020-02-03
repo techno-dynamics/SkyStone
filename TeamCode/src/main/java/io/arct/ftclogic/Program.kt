@@ -3,24 +3,23 @@ package io.arct.ftclogic
 import io.arct.ftclib.drive.MecanumDrive
 import io.arct.ftclib.eventloop.LinearOperationMode
 import io.arct.ftclib.eventloop.OperationMode
-import io.arct.ftclib.util.Direction
+import io.arct.robotlib.navigation.Direction
+import io.arct.robotlib.robot.device
 
-@OperationMode.Bind(OperationMode.Type.Autonomous, name = "Autonomous (RIGHT)", group = "Main")
+@OperationMode.Bind(OperationMode.Type.Autonomous, name = "Autonomous", group = "Main")
 class Program : LinearOperationMode() {
-    private lateinit var drive: MecanumDrive
-
-    override fun init() {
+    init {
         MecanumDrive.distanceConstant = 12.5
-
-        drive = MecanumDrive(robot,
-            robot.map("motor0"),
-            robot.map("motor3"),
-            robot.map("motor1"),
-            robot.map("motor2"),
-
-            directionConstant = 180.0
-        )
     }
+
+    private val drive: MecanumDrive = MecanumDrive(robot,
+        robot device "motor0",
+        robot device "motor3",
+        robot device "motor1",
+        robot device "motor2",
+
+        directionConstant = 180.0
+    )
 
     override fun run() {
         drive.move(Direction.Forward, 0.35)
