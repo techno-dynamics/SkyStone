@@ -35,8 +35,8 @@ class Calibration : LinearOperationMode() {
             val gamepad = robot.gamepad[0]
 
             log
-                .add("Rotation Constant (degrees): " + HolonomicDrive.rotationConstant)
-                .add("Distance Constant (cm): " + HolonomicDrive.distanceConstant)
+                .add("Rotation Constant (degrees): " + MecanumDrive.rotationConstant)
+                .add("Distance Constant (cm): " + MecanumDrive.distanceConstant)
                 .add("Currently Calibrating: ${if (calibratingDistance) "Distance" else "Rotation"} Constant")
                 .update()
 
@@ -53,9 +53,9 @@ class Calibration : LinearOperationMode() {
 
 
             if (calibratingDistance)
-                HolonomicDrive.distanceConstant += modifier.round(8)
+                MecanumDrive.distanceConstant += modifier.round(4)
             else
-                HolonomicDrive.rotationConstant += modifier.round(8)
+                MecanumDrive.rotationConstant += modifier.round(4)
 
             if (modifier != 0.0)
                 try {
@@ -65,16 +65,16 @@ class Calibration : LinearOperationMode() {
 
             if (gamepad.a) {
                 if (calibratingDistance) {
-                    log.add(listOf("Calibrating Distance...", "Attempting to move robot by 2 metres.", "Distance Constant (cm): ${HolonomicDrive.distanceConstant}")).update()
+                    log.add(listOf("Calibrating Distance...", "Attempting to move robot by 2 metres.", "Distance Constant (cm): ${MecanumDrive.distanceConstant}")).update()
 
                     drive.move(Direction.Forward, 0.2, 200.0)
                 } else {
-                    log.add(listOf("Calibrating Rotation...", "Attempting to rotate robot by 16 rotations.", "Rotation Constant (degrees): ${HolonomicDrive.rotationConstant}")).update()
+                    log.add(listOf("Calibrating Rotation...", "Attempting to rotate robot by 16 rotations.", "Rotation Constant (degrees): ${MecanumDrive.rotationConstant}")).update()
 
                     drive.rotate(0.3, 360 * 16.0)
                 }
 
-                log.add(listOf("Completed Calibration Test", "Rotation Constant (degrees): ${HolonomicDrive.rotationConstant}", "Distance Constant (cm): ${HolonomicDrive.distanceConstant}")).update()
+                log.add(listOf("Completed Calibration Test", "Rotation Constant (degrees): ${MecanumDrive.rotationConstant}", "Distance Constant (cm): ${MecanumDrive.distanceConstant}")).update()
 
                 try {
                     Thread.sleep(3000)

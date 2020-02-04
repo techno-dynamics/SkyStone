@@ -25,6 +25,10 @@ secrets.load(new FileInputStream(rootProject.file("secrets.properties")))
 android {
     compileSdkVersion 28
 
+    lintOptions {
+        tasks.lint.enabled = false
+    }
+
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'
