@@ -25,7 +25,7 @@ class Program : LinearOperationMode() {
         robot device "motor1",
         robot device "motor2",
 
-        directionConstant = 180.0
+        alignment = 180.0
     )
 
     private var grabber: Servo = robot device "servo4"

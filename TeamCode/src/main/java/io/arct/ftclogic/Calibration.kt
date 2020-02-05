@@ -19,7 +19,7 @@ class Calibration : LinearOperationMode() {
         robot device "motor1",
         robot device "motor2",
 
-        directionConstant = 180.0
+        alignment = 180.0
     )
 
     init {
