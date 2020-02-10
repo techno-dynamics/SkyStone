@@ -1,10 +1,12 @@
 package io.arct.ftclogic
 
+import com.vuforia.CameraDevice
 import io.arct.ftc.Location
 import io.arct.ftc.Vuforia
 import io.arct.ftclib.drive.MecanumDrive
 import io.arct.ftclib.eventloop.LinearOperationMode
 import io.arct.ftclib.eventloop.OperationMode
+import io.arct.ftclib.hardware.sensors.FtcImu
 import io.arct.robotlib.hardware.motors.Servo
 import io.arct.robotlib.navigation.Direction
 import io.arct.robotlib.robot.device
@@ -19,13 +21,16 @@ class Program : LinearOperationMode() {
         MecanumDrive.rotationConstant = 1.85500000000003
     }
 
+    private var rotationPosition: Double = 0.0
+    private val imu: FtcImu = robot device "imu"
+
     private val drive: MecanumDrive = MecanumDrive(robot,
         robot device "motor0",
         robot device "motor3",
         robot device "motor1",
         robot device "motor2",
 
-        alignment = 180.0
+        alignment = 180.0, autoAlign = false
     )
 
     private var grabber: Servo = robot device "servo4"
@@ -40,46 +45,54 @@ class Program : LinearOperationMode() {
 
     init {
         tracker.targets.activate()
+        CameraDevice.getInstance().setFlashTorchMode(true)
     }
 
     override fun run() {
-        drive.move(Direction.Forward, 0.2, 55.0)
+        drive.move(Direction.Forward, 0.1, 60.0)
         drive.rotate(0.2, -90.0)
 
-        drive.move(Direction.Backward, 0.5)
+        rotationPosition += 90.0
+        adjust()
 
-        var stone = skystone
-//        var distance = 0.0
-        while (stone == null) {
-//            drive.move(Direction.Backward, 0.2, 20.0)
-//            distance += 5.0
-//            Thread.sleep(100)
-            stone = skystone
-        }
-        drive.stop()
+        val distance = collectStone()
+        drive.move(Direction.Forward, 0.1, 150.0 + distance)
+        releaseStone()
 
+        adjust()
+        drive.move(Direction.Backward, 0.1, 150.0 + distance)
+        adjust()
+
+        val distance2 = collectStone()
+        drive.move(Direction.Forward, 0.1, 150.0 + distance + distance2)
+        releaseStone()
+
+        tracker.targets.deactivate()
+    }
+
+    private fun collectStone(): Double {
+        val distance = locateStone()
         drive.move(Direction.Right, 0.15, 45.0) // LEFT IS RIGHT AND RIGHT IS LEFT
         grabStone()
         drive.move(Direction.Left, 0.15, 45.0)
 
-        drive.move(Direction.Forward, 0.2, 100.0)
-        releaseStone()
+        return distance
+    }
 
+    private fun locateStone(): Double {
+        val tick = 20.0
 
-//        while (!stopRequested && active) {
-//            val loc = skystone
-//
-//            if (loc == null) {
-//                log.add("no skystone").clear()
-//                continue
-//            }
-//
-//            log.add("loc: ${loc.x}, ${loc.y}, ${loc.z}")
-//            log.add("rot: ${loc.orientation.firstAngle}, ${loc.orientation.secondAngle}, ${loc.orientation.thirdAngle}")
-//            log.update()
-//        }
+        var stone = skystone
+        var distance = 0.0
 
-        tracker.targets.deactivate()
+        while (stone == null) {
+            drive.move(Direction.Backward, 0.1, tick)
+            distance += tick
+            Thread.sleep(100)
+            stone = skystone
+        }
+
+        return distance
     }
 
     private fun grabStone() {
@@ -90,6 +103,12 @@ class Program : LinearOperationMode() {
     private fun releaseStone() {
         grabber.position = 1.0
     }
+
+    private fun adjust() =
+        drive.rotate(0.2, rotationPosition - orientation)
+
+    private val orientation: Double get() =
+        AngleUnit.DEGREES.fromUnit(imu.orientation.angleUnit, imu.orientation.firstAngle).toDouble()
 
     private val skystone: Location? get() {
         targetVisible = false
