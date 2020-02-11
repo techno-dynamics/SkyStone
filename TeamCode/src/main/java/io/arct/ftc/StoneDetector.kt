@@ -48,6 +48,8 @@ class StoneDetector(private val robot: FtcRobot, key: String) {
         val image = frame.getImage(0)
         val bitmap = vuforia.convertFrameToBitmap(frame)!!
 
+        save(bitmap, 0, "full ")
+
         frame.close()
 
         val values = stones.mapIndexed { index, it ->
@@ -62,7 +64,7 @@ class StoneDetector(private val robot: FtcRobot, key: String) {
         return state(values[0], values[1], values[2])
     }
 
-    private fun save(bitmap: Bitmap, average: Int, label: Int) {
+    private fun save(bitmap: Bitmap, average: Int, label: Any) {
         val telemetry: Telemetry =  robot.__sdk__opMode.telemetry
 
         telemetry.addLine("Image $label (${bitmap.width}x${bitmap.height}px) -> RGB(${Color.red(average)}, ${Color.green(average)}, ${Color.blue(average)})")
