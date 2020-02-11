@@ -13,7 +13,7 @@ import java.io.FileOutputStream
 
 class StoneDetector(private val robot: FtcRobot, key: String) {
     companion object {
-        val stones = listOf(
+        val stones = mutableListOf(
             Rectangle(750, 100, 100, 200),
             Rectangle(750, 300, 100, 200),
             Rectangle(750, 500, 100, 200)
