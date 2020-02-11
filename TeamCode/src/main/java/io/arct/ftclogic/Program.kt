@@ -2,7 +2,7 @@ package io.arct.ftclogic
 
 import com.vuforia.CameraDevice
 import io.arct.ftc.Location
-import io.arct.ftc.Vuforia
+import io.arct.ftc.VuforiaTargeting
 import io.arct.ftclib.drive.MecanumDrive
 import io.arct.ftclib.eventloop.LinearOperationMode
 import io.arct.ftclib.eventloop.OperationMode
@@ -39,7 +39,7 @@ class Program : LinearOperationMode() {
         grabber.position = 1.0
     }
 
-    private val tracker = Vuforia.build(BuildConfig.VUFORIA_KEY, robot)
+    private val tracker = VuforiaTargeting.build(BuildConfig.VUFORIA_KEY, robot)
     private var lastLocation: OpenGLMatrix? = null
     private var targetVisible: Boolean = false
 
@@ -135,9 +135,9 @@ class Program : LinearOperationMode() {
 
         val translation: VectorF = lastLocation!!.translation
 
-        val x = translation[0] / Vuforia.Constants.mmPerInch
-        val y = translation[1] / Vuforia.Constants.mmPerInch
-        val z = translation[2] / Vuforia.Constants.mmPerInch
+        val x = translation[0] / VuforiaTargeting.Constants.mmPerInch
+        val y = translation[1] / VuforiaTargeting.Constants.mmPerInch
+        val z = translation[2] / VuforiaTargeting.Constants.mmPerInch
         val rotation = Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES)
 
         return Location(x.toDouble(), y.toDouble(), z.toDouble(), rotation)

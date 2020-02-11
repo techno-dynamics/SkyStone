@@ -1,22 +1,22 @@
 package io.arct.ftc
 
-import io.arct.ftc.Vuforia.Constants.bridgeRotY
-import io.arct.ftc.Vuforia.Constants.bridgeRotZ
-import io.arct.ftc.Vuforia.Constants.bridgeX
-import io.arct.ftc.Vuforia.Constants.bridgeY
-import io.arct.ftc.Vuforia.Constants.bridgeZ
-import io.arct.ftc.Vuforia.Constants.halfField
-import io.arct.ftc.Vuforia.Constants.mmPerInch
-import io.arct.ftc.Vuforia.Constants.mmTargetHeight
-import io.arct.ftc.Vuforia.Constants.quadField
-import io.arct.ftc.Vuforia.Preferences.cameraDirection
-import io.arct.ftc.Vuforia.Preferences.cameraForwardDisplacement
-import io.arct.ftc.Vuforia.Preferences.cameraLeftDisplacement
-import io.arct.ftc.Vuforia.Preferences.cameraVerticalDisplacement
-import io.arct.ftc.Vuforia.Preferences.phoneIsPortrait
-import io.arct.ftc.Vuforia.Preferences.phoneXRotate
-import io.arct.ftc.Vuforia.Preferences.phoneYRotate
-import io.arct.ftc.Vuforia.Preferences.phoneZRotate
+import io.arct.ftc.VuforiaTargeting.Constants.bridgeRotY
+import io.arct.ftc.VuforiaTargeting.Constants.bridgeRotZ
+import io.arct.ftc.VuforiaTargeting.Constants.bridgeX
+import io.arct.ftc.VuforiaTargeting.Constants.bridgeY
+import io.arct.ftc.VuforiaTargeting.Constants.bridgeZ
+import io.arct.ftc.VuforiaTargeting.Constants.halfField
+import io.arct.ftc.VuforiaTargeting.Constants.mmPerInch
+import io.arct.ftc.VuforiaTargeting.Constants.mmTargetHeight
+import io.arct.ftc.VuforiaTargeting.Constants.quadField
+import io.arct.ftc.VuforiaTargeting.Preferences.cameraDirection
+import io.arct.ftc.VuforiaTargeting.Preferences.cameraForwardDisplacement
+import io.arct.ftc.VuforiaTargeting.Preferences.cameraLeftDisplacement
+import io.arct.ftc.VuforiaTargeting.Preferences.cameraVerticalDisplacement
+import io.arct.ftc.VuforiaTargeting.Preferences.phoneIsPortrait
+import io.arct.ftc.VuforiaTargeting.Preferences.phoneXRotate
+import io.arct.ftc.VuforiaTargeting.Preferences.phoneYRotate
+import io.arct.ftc.VuforiaTargeting.Preferences.phoneZRotate
 import io.arct.ftclib.robot.FtcRobot
 import org.firstinspires.ftc.robotcore.external.ClassFactory
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix
@@ -24,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.*
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection
 import java.util.*
 
-object Vuforia {
+object VuforiaTargeting {
     object Preferences {
         val cameraDirection = CameraDirection.FRONT
 
