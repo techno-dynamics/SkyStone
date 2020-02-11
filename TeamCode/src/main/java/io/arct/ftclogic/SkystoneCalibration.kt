@@ -11,6 +11,7 @@ class SkystoneCalibration : LinearOperationMode() {
     private val stone = StoneDetector(robot, BuildConfig.VUFORIA_KEY)
     private val gamepad = robot.gamepad[0]
     private var alreadyPessed = false
+    private var currentpos = 0
 
     init {
         log.autoClear = true
@@ -23,12 +24,14 @@ class SkystoneCalibration : LinearOperationMode() {
     override fun run() {
         var rectNum = 0
 
-        var x = 0
-        var y = 0
-        var w = 0
-        var h = 0
+        var x = 640
+        var y = 500
+        var w = 150
+        var h = 220
 
         while (active) {
+            log.add("# $rectNum -> ($x, $y, $w, $h)").add("current -> $currentpos").update()
+
             val pressed = gamepad.a || gamepad.b || gamepad.dpad.up || gamepad.dpad.down || gamepad.dpad.left || gamepad.dpad.right || gamepad.rb || gamepad.lb || gamepad.rt > 0.5 || gamepad.lt > 0.5
 
             if (!pressed)
@@ -37,13 +40,23 @@ class SkystoneCalibration : LinearOperationMode() {
             if (pressed && alreadyPessed)
                 continue
 
+            if (pressed)
+                alreadyPessed = true
+
             StoneDetector.stones[rectNum] = Rectangle(x, y, w, h)
 
             if (gamepad.a)
-                stone.state
+                currentpos = stone.state.value
 
-            if (gamepad.b)
+            if (gamepad.b) {
                 rectNum = (rectNum + 1) % 3
+                val s = StoneDetector.stones[rectNum]
+                x = s.x
+                y = s.y
+                w = s.width
+                h = s.height
+
+            }
 
             if (gamepad.dpad.up)
                 y += 10

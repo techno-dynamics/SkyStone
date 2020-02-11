@@ -1,5 +1,6 @@
 package io.arct.ftc
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Environment
@@ -9,14 +10,16 @@ import io.arct.ftclib.robot.FtcRobot
 import org.firstinspires.ftc.robotcore.external.ClassFactory
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer
+import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
-class StoneDetector(private val robot: FtcRobot, key: String) {
+class StoneDetector(private val robot: FtcRobot, key: String, val samples: Int = 3, val saveResults: Boolean = false) {
     companion object {
         val stones = mutableListOf(
-            Rectangle(750, 100, 100, 200),
-            Rectangle(750, 300, 100, 200),
-            Rectangle(750, 500, 100, 200)
+            Rectangle(640, 500, 150, 220),
+            Rectangle(640, 250, 150, 220),
+            Rectangle(640, 0, 150, 220)
         )
     }
 
@@ -44,19 +47,18 @@ class StoneDetector(private val robot: FtcRobot, key: String) {
 
     val state: StoneState get() {
         val frame = vuforia.frameQueue.take()
-
-        val image = frame.getImage(0)
         val bitmap = vuforia.convertFrameToBitmap(frame)!!
-
-        save(bitmap, 0, "full ")
-
         frame.close()
+
+        if (saveResults)
+            save(bitmap, "full")
 
         val values = stones.mapIndexed { index, it ->
             val bmp = Bitmap.createBitmap(bitmap, it.x, it.y, it.width, it.height)
             val avg = bmp.average
 
-            save(bmp, avg, index)
+            if (saveResults)
+                save(bmp, index)
 
             avg
         }
@@ -64,24 +66,21 @@ class StoneDetector(private val robot: FtcRobot, key: String) {
         return state(values[0], values[1], values[2])
     }
 
-    private fun save(bitmap: Bitmap, average: Int, label: Any) {
-        val telemetry: Telemetry =  robot.__sdk__opMode.telemetry
-
-        telemetry.addLine("Image $label (${bitmap.width}x${bitmap.height}px) -> RGB(${Color.red(average)}, ${Color.green(average)}, ${Color.blue(average)})")
-        telemetry.update()
-
-        bitmap.compress(
-            Bitmap.CompressFormat.PNG,
-            100,
-            FileOutputStream(Environment.getExternalStorageDirectory().path + "/FTC/scan_$label")
-        )
+    private fun save(bitmap: Bitmap, label: Any) {
+        try {
+            val stream = FileOutputStream(File(Environment.getExternalStorageDirectory(), "ftc_scan_$label.jpg"))
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     private fun state(a: Int, b: Int, c: Int) = when {
         a < b && a < c -> StoneState.One
         b < a && b < c -> StoneState.Two
         c < a && c < b -> StoneState.Three
-        else -> throw Exception("Could not determine stone state!")
+        else -> StoneState.Unknown
     }
 }
 

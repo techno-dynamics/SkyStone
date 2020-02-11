@@ -2,6 +2,8 @@ package io.arct.ftclogic
 
 import com.vuforia.CameraDevice
 import io.arct.ftc.Location
+import io.arct.ftc.StoneDetector
+import io.arct.ftc.StoneState
 import io.arct.ftc.VuforiaTargeting
 import io.arct.ftclib.drive.MecanumDrive
 import io.arct.ftclib.eventloop.LinearOperationMode
@@ -21,6 +23,8 @@ class Program : LinearOperationMode() {
         MecanumDrive.rotationConstant = 1.85500000000003
     }
 
+    private val detector = StoneDetector(robot, BuildConfig.VUFORIA_KEY)
+
     private var rotationPosition: Double = 0.0
     private val imu: FtcImu = robot device "imu"
 
@@ -38,61 +42,50 @@ class Program : LinearOperationMode() {
     init {
         grabber.position = 1.0
     }
-
-    private val tracker = VuforiaTargeting.build(BuildConfig.VUFORIA_KEY, robot)
-    private var lastLocation: OpenGLMatrix? = null
-    private var targetVisible: Boolean = false
-
-    init {
-        tracker.targets.activate()
-        CameraDevice.getInstance().setFlashTorchMode(true)
-    }
-
     override fun run() {
-        drive.move(Direction.Forward, 0.1, 60.0)
-        drive.rotate(0.2, -90.0)
+        val position = detector.state
 
-        rotationPosition += 90.0
-        adjust()
+        when (position) {
+            StoneState.One -> drive.move(Direction.Backward, 0.3, 10.0)
+            StoneState.Three -> drive.move(Direction.Forward, 0.3, 10.0)
+        }
 
-        val distance = collectStone()
-        drive.move(Direction.Forward, 0.1, 150.0 + distance)
+        drive.move(Direction.Right, 0.3, 90.0)
+        grabStone()
+        drive.move(Direction.Left, 0.3, 90.0)
+
+        drive.move(Direction.Backward, 0.3, 100.0)
         releaseStone()
 
-        adjust()
-        drive.move(Direction.Backward, 0.1, 150.0 + distance)
-        adjust()
-
-        val distance2 = collectStone()
-        drive.move(Direction.Forward, 0.1, 150.0 + distance + distance2)
-        releaseStone()
-
-        tracker.targets.deactivate()
+//        drive.move(Direction.Forward, 0.1, 60.0)
+//        drive.rotate(0.2, -90.0)
+//
+//        rotationPosition += 90.0
+//        adjust()
+//
+//        val distance = collectStone()
+//        drive.move(Direction.Forward, 0.1, 150.0 + distance)
+//        releaseStone()
+//
+//        adjust()
+//        drive.move(Direction.Backward, 0.1, 150.0 + distance)
+//        adjust()
+//
+//        val distance2 = collectStone()
+//        drive.move(Direction.Forward, 0.1, 150.0 + distance + distance2)
+//        releaseStone()
+//
+//        tracker.targets.deactivate()
     }
 
     private fun collectStone(): Double {
-        val distance = locateStone()
+//        val distance = locateStone()
         drive.move(Direction.Right, 0.15, 45.0) // LEFT IS RIGHT AND RIGHT IS LEFT
         grabStone()
         drive.move(Direction.Left, 0.15, 45.0)
 
-        return distance
-    }
-
-    private fun locateStone(): Double {
-        val tick = 20.0
-
-        var stone = skystone
-        var distance = 0.0
-
-        while (stone == null) {
-            drive.move(Direction.Backward, 0.1, tick)
-            distance += tick
-            Thread.sleep(100)
-            stone = skystone
-        }
-
-        return distance
+        return 0.0
+//        return distance
     }
 
     private fun grabStone() {
@@ -109,37 +102,4 @@ class Program : LinearOperationMode() {
 
     private val orientation: Double get() =
         AngleUnit.DEGREES.fromUnit(imu.orientation.angleUnit, imu.orientation.firstAngle).toDouble()
-
-    private val skystone: Location? get() {
-        targetVisible = false
-
-        for (trackable in tracker.trackables) {
-            if (trackable.name != "Stone Target")
-                continue
-
-            if (!(trackable.listener as VuforiaTrackableDefaultListener).isVisible)
-                continue
-
-            targetVisible = true
-
-            val robotLocationTransform = (trackable.listener as VuforiaTrackableDefaultListener).updatedRobotLocation
-
-            if (robotLocationTransform != null)
-                lastLocation = robotLocationTransform
-
-            break
-        }
-
-        if (!targetVisible)
-            return null
-
-        val translation: VectorF = lastLocation!!.translation
-
-        val x = translation[0] / VuforiaTargeting.Constants.mmPerInch
-        val y = translation[1] / VuforiaTargeting.Constants.mmPerInch
-        val z = translation[2] / VuforiaTargeting.Constants.mmPerInch
-        val rotation = Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES)
-
-        return Location(x.toDouble(), y.toDouble(), z.toDouble(), rotation)
-    }
 }
