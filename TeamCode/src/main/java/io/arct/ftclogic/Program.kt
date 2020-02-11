@@ -25,9 +25,6 @@ class Program : LinearOperationMode() {
 
     private val detector = StoneDetector(robot, BuildConfig.VUFORIA_KEY)
 
-    private var rotationPosition: Double = 0.0
-    private val imu: FtcImu = robot device "imu"
-
     private val drive: MecanumDrive = MecanumDrive(robot,
         robot device "motor0",
         robot device "motor3",
@@ -45,16 +42,20 @@ class Program : LinearOperationMode() {
     override fun run() {
         val position = detector.state
 
+        drive.move(Direction.Right, 0.2, 45.0)
+
         when (position) {
-            StoneState.One -> drive.move(Direction.Backward, 0.3, 10.0)
-            StoneState.Three -> drive.move(Direction.Forward, 0.3, 10.0)
+            StoneState.One -> drive.move(Direction.Backward, 0.2, 10.0)
+            StoneState.Three -> drive.move(Direction.Forward, 0.2, 10.0)
         }
 
-        drive.move(Direction.Right, 0.3, 90.0)
-        grabStone()
-        drive.move(Direction.Left, 0.3, 90.0)
+        drive.move(Direction.Right, 0.2, 45.0)
 
-        drive.move(Direction.Backward, 0.3, 100.0)
+        grabStone()
+        Thread.sleep(1000)
+        drive.move(Direction.Left, 0.2, 45.0)
+
+        drive.move(Direction.Backward, 0.2, 100.0)
         releaseStone()
 
 //        drive.move(Direction.Forward, 0.1, 60.0)
@@ -78,28 +79,11 @@ class Program : LinearOperationMode() {
 //        tracker.targets.deactivate()
     }
 
-    private fun collectStone(): Double {
-//        val distance = locateStone()
-        drive.move(Direction.Right, 0.15, 45.0) // LEFT IS RIGHT AND RIGHT IS LEFT
-        grabStone()
-        drive.move(Direction.Left, 0.15, 45.0)
-
-        return 0.0
-//        return distance
-    }
-
     private fun grabStone() {
         grabber.position = 0.0
-        Thread.sleep(1000)
     }
 
     private fun releaseStone() {
         grabber.position = 1.0
     }
-
-    private fun adjust() =
-        drive.rotate(0.2, rotationPosition - orientation)
-
-    private val orientation: Double get() =
-        AngleUnit.DEGREES.fromUnit(imu.orientation.angleUnit, imu.orientation.firstAngle).toDouble()
 }
