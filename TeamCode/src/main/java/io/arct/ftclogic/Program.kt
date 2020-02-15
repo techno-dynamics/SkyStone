@@ -1,20 +1,13 @@
 package io.arct.ftclogic
 
-import com.vuforia.CameraDevice
-import io.arct.ftc.Location
 import io.arct.ftc.StoneDetector
 import io.arct.ftc.StoneState
-import io.arct.ftc.VuforiaTargeting
 import io.arct.ftclib.drive.MecanumDrive
 import io.arct.ftclib.eventloop.LinearOperationMode
 import io.arct.ftclib.eventloop.OperationMode
-import io.arct.ftclib.hardware.sensors.FtcImu
 import io.arct.robotlib.hardware.motors.Servo
 import io.arct.robotlib.navigation.Direction
 import io.arct.robotlib.robot.device
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF
-import org.firstinspires.ftc.robotcore.external.navigation.*
 
 @OperationMode.Bind(OperationMode.Type.Autonomous, name = "Autonomous", group = "Main")
 class Program : LinearOperationMode() {
@@ -39,6 +32,7 @@ class Program : LinearOperationMode() {
     init {
         grabber.position = 1.0
     }
+
     override fun run() {
         val position = detector.state
 

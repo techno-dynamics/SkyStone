@@ -1,6 +1,5 @@
 package io.arct.ftc
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Environment
@@ -8,13 +7,17 @@ import com.vuforia.PIXEL_FORMAT
 import com.vuforia.Vuforia
 import io.arct.ftclib.robot.FtcRobot
 import org.firstinspires.ftc.robotcore.external.ClassFactory
-import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class StoneDetector(private val robot: FtcRobot, key: String, val samples: Int = 3, val saveResults: Boolean = false) {
+class StoneDetector(
+        robot: FtcRobot,
+        key: String,
+        cameraDirection: VuforiaLocalizer.CameraDirection = VuforiaLocalizer.CameraDirection.FRONT,
+        val saveResults: Boolean = false
+) {
     companion object {
         val stones = mutableListOf(
             Rectangle(640, 500, 150, 220),
@@ -37,7 +40,7 @@ class StoneDetector(private val robot: FtcRobot, key: String, val samples: Int =
         val parameters = VuforiaLocalizer.Parameters(cameraMonitorViewId)
 
         parameters.vuforiaLicenseKey = key
-        parameters.cameraDirection = VuforiaTargeting.Preferences.cameraDirection
+        parameters.cameraDirection = cameraDirection
 
         vuforia = ClassFactory.getInstance().createVuforia(parameters)
 
@@ -55,12 +58,11 @@ class StoneDetector(private val robot: FtcRobot, key: String, val samples: Int =
 
         val values = stones.mapIndexed { index, it ->
             val bmp = Bitmap.createBitmap(bitmap, it.x, it.y, it.width, it.height)
-            val avg = bmp.average
 
             if (saveResults)
                 save(bmp, index)
 
-            avg
+            bmp.average
         }
 
         return state(values[0], values[1], values[2])
