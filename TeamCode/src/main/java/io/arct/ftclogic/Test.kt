@@ -26,10 +26,10 @@ class Test : LinearOperationMode() {
     override fun run() {
         val m: Motor = robot device "motor0"
 
-        m.move(0.2, -100.0); Thread.sleep(100)
-        m.move(0.4, 200.0); Thread.sleep(100)
-        m.move(0.6, -300.0); Thread.sleep(100)
-        m.move(0.8, 400.0); Thread.sleep(100)
-        m.move(1.0, -500.0); Thread.sleep(100)
+        m.move(0.2, 100.0); Thread.sleep(100)
+        m.move(0.4, -200.0); Thread.sleep(100)
+        m.move(0.6, 300.0); Thread.sleep(100)
+        m.move(0.8, -400.0); Thread.sleep(100)
+        m.move(1.0, 500.0); Thread.sleep(100)
     }
 }

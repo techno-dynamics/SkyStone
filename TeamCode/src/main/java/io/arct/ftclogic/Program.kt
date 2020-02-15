@@ -39,45 +39,47 @@ class Program : LinearOperationMode() {
         drive.move(Direction.Right, 0.2, 45.0)
 
         when (position) {
-            StoneState.One -> drive.move(Direction.Backward, 0.2, 10.0)
+            StoneState.One -> drive.move(Direction.Backward, 0.2, 9.5)
+            StoneState.Two -> drive.move(Direction.Backward, 0.2, 0.75)
             StoneState.Three -> drive.move(Direction.Forward, 0.2, 10.0)
         }
 
-        drive.move(Direction.Right, 0.2, 45.0)
+        // Get Stone
+        getStone()
 
-        grabStone()
-        Thread.sleep(1000)
-        drive.move(Direction.Left, 0.2, 45.0)
+        // Move Back
 
-        drive.move(Direction.Backward, 0.2, 100.0)
+        drive.move(Direction.Backward, 0.2, 135.0)
         releaseStone()
 
-//        drive.move(Direction.Forward, 0.1, 60.0)
-//        drive.rotate(0.2, -90.0)
-//
-//        rotationPosition += 90.0
-//        adjust()
-//
-//        val distance = collectStone()
-//        drive.move(Direction.Forward, 0.1, 150.0 + distance)
-//        releaseStone()
-//
-//        adjust()
-//        drive.move(Direction.Backward, 0.1, 150.0 + distance)
-//        adjust()
-//
-//        val distance2 = collectStone()
-//        drive.move(Direction.Forward, 0.1, 150.0 + distance + distance2)
-//        releaseStone()
-//
-//        tracker.targets.deactivate()
+        // Move to Next Stone
+
+        drive.move(Direction.Forward, 0.2, 135.0 + 60.0) // Offset of two stones
+
+        // Get Stone # 2
+
+        getStone(d2 = 45.0)
+
+        // Move Back
+
+        drive.move(Direction.Backward, 0.3, 190.0)
+        releaseStone()
+    }
+
+    private fun getStone(d1: Double = 45.0, d2: Double = 35.0) {
+        drive.move(Direction.Right, 0.2, d1)
+        grabStone()
+
+        drive.move(Direction.Left, 0.2, d2)
     }
 
     private fun grabStone() {
         grabber.position = 0.0
+        Thread.sleep(1000)
     }
 
     private fun releaseStone() {
         grabber.position = 1.0
+        Thread.sleep(1000)
     }
 }
