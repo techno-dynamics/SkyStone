@@ -12,8 +12,8 @@ import io.arct.robotlib.robot.device
 class Test : LinearOperationMode() {
 
     init {
-        FtcMotor.adjustmentPower = 0.1
-        FtcMotor.targetPositionTolerance = 0.0
+        FtcMotor.Constants.adjustmentPower = 0.1
+        FtcMotor.Constants.targetPositionTolerance = 0.0
     }
 
     private var drive: Drive = MecanumDrive(robot,
