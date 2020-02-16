@@ -9,7 +9,7 @@ import io.arct.robotlib.robot.device
 @OperationMode.Bind(OperationMode.Type.Autonomous, name = "Autonomous (LEFT)", group = "Main")
 class ProgramInverse : LinearOperationMode() {
     init {
-        MecanumDrive.distanceConstant = 12.5
+        MecanumDrive.Constants.distance = 12.5
     }
 
     private val drive: MecanumDrive = MecanumDrive(robot,

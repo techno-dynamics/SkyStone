@@ -13,7 +13,7 @@ import io.arct.robotlib.robot.device
 class Calibration : LinearOperationMode() {
     private var calibratingDistance: Boolean = false
 
-    private var drive: Drive = MecanumDrive(robot,
+    private var drive: MecanumDrive = MecanumDrive(robot,
         robot device "motor0",
         robot device "motor3",
         robot device "motor1",
@@ -35,8 +35,8 @@ class Calibration : LinearOperationMode() {
             val gamepad = robot.gamepad[0]
 
             log
-                .add("Rotation Constant (degrees): " + MecanumDrive.rotationConstant)
-                .add("Distance Constant (cm): " + MecanumDrive.distanceConstant)
+                .add("Rotation Constant (degrees): " + drive.rotationConstant)
+                .add("Distance Constant (cm): " + drive.distanceConstant)
                 .add("Currently Calibrating: ${if (calibratingDistance) "Distance" else "Rotation"} Constant")
                 .update()
 
@@ -47,15 +47,19 @@ class Calibration : LinearOperationMode() {
                 gamepad.lt > 0.5 -> modifier -= 0.1
                 gamepad.rb -> modifier += 0.01
                 gamepad.rt > 0.5 -> modifier += 0.1
+                gamepad.dpad.left -> modifier -= 0.001
+                gamepad.dpad.right -> modifier += 0.001
                 gamepad.dpad.up -> modifier += 1
                 gamepad.dpad.down -> modifier -= 1
             }
 
+            modifier = (modifier * 10000).toInt().toDouble() / 10000
+
 
             if (calibratingDistance)
-                MecanumDrive.distanceConstant += modifier.round(4)
+                drive.distanceConstant += modifier
             else
-                MecanumDrive.rotationConstant += modifier.round(4)
+                drive.rotationConstant += modifier
 
             if (modifier != 0.0)
                 try {
@@ -65,16 +69,16 @@ class Calibration : LinearOperationMode() {
 
             if (gamepad.a) {
                 if (calibratingDistance) {
-                    log.add(listOf("Calibrating Distance...", "Attempting to move robot by 2 metres.", "Distance Constant (cm): ${MecanumDrive.distanceConstant}")).update()
+                    log.add(listOf("Calibrating Distance...", "Attempting to move robot by 2 metres.", "Distance Constant (cm): ${drive.distanceConstant}")).update()
 
                     drive.move(Direction.Forward, 0.2, 200.0)
                 } else {
-                    log.add(listOf("Calibrating Rotation...", "Attempting to rotate robot by 16 rotations.", "Rotation Constant (degrees): ${MecanumDrive.rotationConstant}")).update()
+                    log.add(listOf("Calibrating Rotation...", "Attempting to rotate robot by 16 rotations.", "Rotation Constant (degrees): ${drive.rotationConstant}")).update()
 
                     drive.rotate(0.3, 360 * 16.0)
                 }
 
-                log.add(listOf("Completed Calibration Test", "Rotation Constant (degrees): ${MecanumDrive.rotationConstant}", "Distance Constant (cm): ${MecanumDrive.distanceConstant}")).update()
+                log.add(listOf("Completed Calibration Test", "Rotation Constant (degrees): ${drive.rotationConstant}", "Distance Constant (cm): ${drive.distanceConstant}")).update()
 
                 try {
                     Thread.sleep(3000)

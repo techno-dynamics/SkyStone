@@ -24,12 +24,21 @@ class Test : LinearOperationMode() {
 //    )
 
     override fun run() {
-        val m: Motor = robot device "motor0"
+        val m: FtcMotor<*> = robot device "motor0"
 
-        m.move(0.2, 100.0); Thread.sleep(100)
-        m.move(0.4, -200.0); Thread.sleep(100)
-        m.move(0.6, 300.0); Thread.sleep(100)
-        m.move(0.8, -400.0); Thread.sleep(100)
-        m.move(1.0, 500.0); Thread.sleep(100)
+        m.target(100.0).start(0.2).waitTarget()
+        m.stop()
+
+        m.target(-200.0).start(0.4).waitTarget()
+        m.stop()
+
+        m.target(300.0).start(0.6).waitTarget()
+        m.stop()
+
+        m.target(-400.0).start(0.8).waitTarget()
+        m.stop()
+
+        m.target(500.0).start(1.0).waitTarget()
+        m.stop()
     }
 }
