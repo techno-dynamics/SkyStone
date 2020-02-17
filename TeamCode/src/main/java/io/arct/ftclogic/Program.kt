@@ -90,7 +90,7 @@ class Program : LinearOperationMode() {
 
     override fun run() = when (mode) {
         0 -> program(0, Direction.Backward, 1.0)
-        1 -> program(0, Direction.Forward, -1.0)
+        1 -> program(1, Direction.Forward, -1.0)
         2 -> neutral()
 
         else -> Unit
@@ -125,10 +125,10 @@ class Program : LinearOperationMode() {
 
         // Move Back
 
-        drive.move(directionBuild, .4, 120.0 + (offset * rotationModifier))
+        drive.move(directionBuild, .5, 120.0 + (offset * rotationModifier))
         releaseStone()
 
-        drive.move(directionBuild, .25, 85.0)
+        drive.move(directionBuild, .35, 85.0)
 
         // WALL ALIGN {
         drive.move(Direction.Left, 0.2)
@@ -137,15 +137,15 @@ class Program : LinearOperationMode() {
         drive.move(Direction.Right, 0.2, 45.0)
         // }
 
-        drive.rotate(-.2, 70.0)
+        drive.rotate(-.2, 80.0)
 
-        drive.move(Direction.Backward, .2, 45.0)
+        drive.move(Direction.Backward, .2, 55.0)
         buildplate(true)
 
         drive.move(Direction.Forward, .4, 30.0)
 
         drive.rotate(rotationModifier * .4, 20.0)
-        drive.move(Direction.Forward, .4, 20.0)
+        drive.move(Direction.Forward, .3, 20.0)
         drive.rotate(rotationModifier * .4, 95.0)
 
         buildplate(false)

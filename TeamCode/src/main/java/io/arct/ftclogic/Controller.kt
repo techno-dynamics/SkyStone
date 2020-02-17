@@ -34,6 +34,7 @@ class Controller : OperationMode() {
     private val pivot: ContinuousServo = robot device "servo1"
     private val capstone: Servo = robot device "servo3"
     private val limit: TouchSensor = robot device "digital0"
+    private val tape: Motor = robot device "motor6"
 
     private var buildplate: Boolean = false
     private var orientation: Double = ImuOffset
@@ -64,10 +65,19 @@ class Controller : OperationMode() {
         input(robot.gamepad[1])
         intake(robot.gamepad[1].rt >= 0.5, robot.gamepad[1].lt >= 0.5)
         linear(robot.gamepad[1].right.y)
+        tape(robot.gamepad[1].dpad.up, robot.gamepad[1].dpad.down)
         buildplate()
         clamp()
         pivot()
         capstone()
+    }
+
+    private fun tape(up: Boolean, down: Boolean) {
+        tape.power = when {
+            up -> -0.75
+            down -> 0.75
+            else -> 0.0
+        }
     }
 
     private fun intake(intake: Boolean, outtake: Boolean) {
