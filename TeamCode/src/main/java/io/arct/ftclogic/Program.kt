@@ -110,7 +110,7 @@ class Program : LinearOperationMode() {
         val offset = when (position) {
             StoneState.One -> -17.5
             StoneState.Two -> -1.5
-            StoneState.Three -> 10.0
+            StoneState.Three -> 8.5
 
             StoneState.Unknown -> -2.0
         }
@@ -128,7 +128,7 @@ class Program : LinearOperationMode() {
         drive.move(directionBuild, .4, 120.0 + (offset * rotationModifier))
         releaseStone()
 
-        drive.move(directionBuild, .25, 65.0)
+        drive.move(directionBuild, .25, 85.0)
 
         // WALL ALIGN {
         drive.move(Direction.Left, 0.2)
@@ -139,7 +139,7 @@ class Program : LinearOperationMode() {
 
         drive.rotate(-.2, 70.0)
 
-        drive.move(Direction.Backward, .2, 40.0)
+        drive.move(Direction.Backward, .2, 45.0)
         buildplate(true)
 
         drive.move(Direction.Forward, .4, 30.0)
@@ -155,7 +155,7 @@ class Program : LinearOperationMode() {
         drive.stop()
 
         if (mode == 0)
-            drive.move(Direction.Right, 0.2, 30.0)
+            drive.move(Direction.Right, 0.40, 40.0)
 
         tape.power = -.75
         drive.move(Direction.Forward, 0.1, 10.0)
