@@ -35,6 +35,7 @@ class Controller : OperationMode() {
     private val capstone: Servo = robot device "servo3"
     private val limit: TouchSensor = robot device "digital0"
     private val tape: Motor = robot device "motor6"
+    private var grabber: Servo = robot device "servo4"
 
     private var buildplate: Boolean = false
     private var orientation: Double = ImuOffset
@@ -42,6 +43,7 @@ class Controller : OperationMode() {
     private var pivotBrick: Boolean = false
     private var pressed: Boolean = false
     private var capstoneMode: Boolean = true
+    private var grabberArm: Boolean = false
 
     init {
         thread {
@@ -70,6 +72,13 @@ class Controller : OperationMode() {
         clamp()
         pivot()
         capstone()
+        grabber()
+        resetImu(robot.gamepad[0].guide)
+    }
+
+    private fun resetImu(reset: Boolean) {
+        if (reset)
+            ImuOffset = orientation
     }
 
     private fun tape(up: Boolean, down: Boolean) {
@@ -104,13 +113,17 @@ class Controller : OperationMode() {
         capstone.position = if (capstoneMode) 1.0 else 0.0
     }
 
+    private fun grabber() {
+        grabber.position = if (grabberArm) 0.0 else 1.0
+    }
+
     private fun buildplate() {
         buildplateLeft.position = if (buildplate) 1.0 else 0.0
         buildplateRight.position = if (buildplate) 0.0 else 1.0
     }
 
     private fun input(gamepad: Gamepad) {
-        if (pressed && (gamepad.lb || gamepad.rb || gamepad.a || gamepad.b))
+        if (pressed && (gamepad.lb || gamepad.rb || gamepad.a || gamepad.b || gamepad.x))
             return
 
         if (gamepad.lb)
@@ -125,10 +138,13 @@ class Controller : OperationMode() {
         if (gamepad.b)
             capstoneMode = !capstoneMode
 
-        pressed = gamepad.lb || gamepad.rb || gamepad.a || gamepad.b
+        if (gamepad.x)
+            grabberArm = !grabberArm
+
+        pressed = gamepad.lb || gamepad.rb || gamepad.a || gamepad.b || gamepad.x
     }
 
     companion object {
-        private const val ImuOffset = 180.0
+        private var ImuOffset = 180.0
     }
 }

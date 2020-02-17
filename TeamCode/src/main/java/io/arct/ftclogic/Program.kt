@@ -132,7 +132,7 @@ class Program : LinearOperationMode() {
 
         // WALL ALIGN {
         drive.move(Direction.Left, 0.2)
-        Thread.sleep(2000)
+        Thread.sleep(2750)
         drive.stop()
         drive.move(Direction.Right, 0.2, 45.0)
         // }
@@ -172,7 +172,7 @@ class Program : LinearOperationMode() {
         drive.move(Direction.Right, .1, 45.0)
         grabStone()
 
-        drive.move(Direction.Left, .2, 45.0)
+        drive.move(Direction.Left, .2, 20.0)
     }
 
     private fun grabStone() {
