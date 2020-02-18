@@ -172,7 +172,7 @@ class Program : LinearOperationMode() {
         drive.move(Direction.Right, .1, 45.0)
         grabStone()
 
-        drive.move(Direction.Left, .2, 20.0)
+        drive.move(Direction.Left, .2, 25.0)
     }
 
     private fun grabStone() {
