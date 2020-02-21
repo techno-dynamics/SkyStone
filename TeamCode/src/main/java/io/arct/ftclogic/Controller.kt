@@ -59,6 +59,8 @@ class Controller : OperationMode() {
         capstone.position = 1.0
 
         log.add("Ready").update()
+
+        log.autoClear = false
     }
 
     override fun loop() {
@@ -73,12 +75,14 @@ class Controller : OperationMode() {
         pivot()
         capstone()
         grabber()
-        resetImu(robot.gamepad[0].guide)
+        resetImu(robot.gamepad[0].start)
     }
 
     private fun resetImu(reset: Boolean) {
-        if (reset)
-            ImuOffset = orientation
+        if (reset) {
+            imu.init()
+            log.add("Reset IMU!").update()
+        }
     }
 
     private fun tape(up: Boolean, down: Boolean) {
@@ -145,6 +149,6 @@ class Controller : OperationMode() {
     }
 
     companion object {
-        private var ImuOffset = 180.0
+        private val ImuOffset = 180.0
     }
 }
