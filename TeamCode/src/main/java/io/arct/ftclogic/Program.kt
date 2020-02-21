@@ -44,7 +44,7 @@ class Program : LinearOperationMode() {
 
         val gamepad = robot.gamepad[0]
         var pressed = false
-        while (!gamepad.a) {
+        while (!gamepad.y) {
 
             log.add("Currently selecting mode...").add("Alliance: " + when (mode) {
                 0 -> "Blue Alliance"
@@ -65,7 +65,7 @@ class Program : LinearOperationMode() {
 
             log.update()
 
-            if (pressed && (gamepad.b || gamepad.x || gamepad.y))
+            if (pressed && (gamepad.b || gamepad.x || gamepad.a))
                 continue
 
             pressed = false
@@ -73,7 +73,7 @@ class Program : LinearOperationMode() {
             mode = when {
                 gamepad.x -> 0
                 gamepad.b -> 1
-                gamepad.y -> 2
+                gamepad.a -> 2
                 else -> mode
             }
         }
@@ -98,7 +98,7 @@ class Program : LinearOperationMode() {
 
     private fun neutral() {
         tape.power = -.75
-        Thread.sleep(550)
+        Thread.sleep(1750)
         tape.power = 0.0
     }
 
@@ -107,13 +107,16 @@ class Program : LinearOperationMode() {
 
         drive.move(Direction.Right, 0.2, 45.0)
 
-        val offset = when (position) {
+        var offset = when (position) {
             StoneState.One -> -17.5
             StoneState.Two -> -1.5
             StoneState.Three -> 8.5
 
             StoneState.Unknown -> -2.0
         }
+
+        if (mode == 1)
+            offset += 1.0
 
         if (offset > 0.0)
             drive.move(Direction.Forward, .2, offset)
@@ -128,7 +131,7 @@ class Program : LinearOperationMode() {
         drive.move(directionBuild, .5, 120.0 + (offset * rotationModifier))
         releaseStone()
 
-        drive.move(directionBuild, .35, 85.0)
+        drive.move(directionBuild, .35, 85.0 - if (mode == 1) 20.0 else 0.0)
 
         // WALL ALIGN {
         drive.move(Direction.Left, 0.2)
